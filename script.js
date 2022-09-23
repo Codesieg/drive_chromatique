@@ -1,6 +1,6 @@
-import { apiKey, driveId, auth } from '/modules/conf.js';
+// import { apiKey, driveId, auth } from '/modules/conf.js';
 
-  function authenticate() {
+function authenticate() {
     return gapi.auth2.getAuthInstance()
         .signIn({scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.photos.readonly https://www.googleapis.com/auth/drive.readonly"})
         .then(function() { console.log("Sign-in successful"); },
@@ -31,7 +31,6 @@ import { apiKey, driveId, auth } from '/modules/conf.js';
                 let fileNames = [];
                 for (const file of allFiles) {
                     fileNames.push(file.name);
-                   
                     const getUl = document.querySelector('.list-manga-dir');
                     let creatLi = document.createElement('li');
                     let creatA = document.createElement('a');
@@ -66,7 +65,7 @@ import { apiKey, driveId, auth } from '/modules/conf.js';
  * Create a folder and prints the folder ID
  * @return{obj} folder Id
  * */
- async function createFolder() {
+  async function createFolder() {
   
     // TODO: Récupérer tout les nom de dossier dans un tableau
 
