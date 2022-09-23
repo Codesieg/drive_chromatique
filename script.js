@@ -11,7 +11,7 @@
               function(err) { console.error("Error signing in", err); });
   }
   function loadClient() {
-    gapi.client.setApiKey("AIzaSyA3TUHMYHWTb7uPTn9LE8CIS_K4LfgeUH0");
+    gapi.client.setApiKey("AIzaSyA3TUHMYHWTb7uPTn9LE8CIS_K4LfgeUH0"); // api key here
     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
               function(err) { console.error("Error loading GAPI client for API", err); });
@@ -24,29 +24,33 @@
       'supportsAllDrives': true,
       'includeItemsFromAllDrives': true,
       'corpora': 'drive',
-      'driveId':'0AFIye_b5hvkvUk9PVA',
-      'fields':'files(id,name, parents, webViewLink)',
+      'driveId':'0AFIye_b5hvkvUk9PVA', // ID of drive to connect (mon drive : 0AFIye_b5hvkvUk9PVA)
+      'fields':'files(id, name, parents, webViewLink)', // fields we want to include
 
     })
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
-                let allDir = response.result.files;
-                for (const dir of allDir) {
-                  console.log(dir);
-                  const getUl = document.querySelector('.list-manga-dir');
-                  let creatLi = document.createElement('li');
-                  let creatA = document.createElement('a');
-                
-                  creatA.setAttribute('href', dir['webViewLink']);
-                  creatA.textContent = dir['name'];
-                  getUl.appendChild(creatLi);
-                  const getElementLi = getUl.lastChild;
-                  console.log(creatA);
-                  getElementLi.appendChild(creatA);
+                let allFiles = response.result.files;
+          
+                let fileNames = [];
+                for (const file of allFiles) {
+                    fileNames.push(file.name);
+                   
+                    const getUl = document.querySelector('.list-manga-dir');
+                    let creatLi = document.createElement('li');
+                    let creatA = document.createElement('a');
+                    
+                    creatA.setAttribute('href', file['webViewLink']);
+                    creatA.textContent = file['name'];
+                    getUl.appendChild(creatLi);
+                    const getElementLi = getUl.lastChild;
+                    console.log(creatA);
+                    getElementLi.appendChild(creatA);
 
-                  console.log("Nom : ", dir['name']);
-                  console.log("Link : ", dir['webViewLink']);
-                }
+                    console.log("Nom : ", file['name']);
+                    console.log("Link : ", file['webViewLink']);
+                    }
+                    console.log(fileNames);
                 console.log("Response", response.result.files);
               },
         // .then(function(response) {
@@ -61,3 +65,39 @@
   gapi.load("client:auth2", function() {
     gapi.auth2.init({client_id: "763374182806-7g4ufr9sr7dtur1ua16bihe4j9f6iga5.apps.googleusercontent.com"});
   });
+
+/**
+ * Create a folder and prints the folder ID
+ * @return{obj} folder Id
+ * */
+ async function createFolder() {
+  
+    // TODO: Récupérer tout les nom de dossier dans un tableau
+
+    // TODO : Création d'une boucle pour créer tout les dossiers.
+
+    // TODO : Création des dossiers
+    const fileMetadata = {
+      name: 'Invoices',
+      mimeType: 'application/vnd.google-apps.folder',
+    };
+    try {
+      const file = await gapi.client.drive.files.create({
+        resource: fileMetadata,
+        fields: 'id',
+      });
+      console.log('Folder Id:', file.data.id);
+      return file.data.id;
+    } catch (err) {
+      // TODO(developer) - Handle error
+      throw err;
+    }
+  }
+  
+
+  // Here function for move old folder to new folder
+  function moveFolder() {
+
+  }
+
+
