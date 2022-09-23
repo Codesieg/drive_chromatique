@@ -1,3 +1,5 @@
+Remplir le fichier de conf dans modules/conf.js
+
 Pour lancer le serveur : 
 python -m http.server 8000
 

@@ -1,8 +1,4 @@
-  /**
-   * Sample JavaScript code for drive.files.list
-   * See instructions for running APIs Explorer code samples locally:
-   * https://developers.google.com/explorer-help/code-samples#javascript
-   */
+import { apiKey, driveId, auth } from '/modules/conf.js';
 
   function authenticate() {
     return gapi.auth2.getAuthInstance()
@@ -24,7 +20,7 @@
       'supportsAllDrives': true,
       'includeItemsFromAllDrives': true,
       'corpora': 'drive',
-      'driveId':'0AFIye_b5hvkvUk9PVA', // ID of drive to connect (mon drive : 0AFIye_b5hvkvUk9PVA)
+      'driveId': driveId, // ID of drive to connect 
       'fields':'files(id, name, parents, webViewLink)', // fields we want to include
 
     })
