@@ -95,4 +95,11 @@ function authenticate() {
 
   }
 
+  // Here function for remove old folder
+  function removeOldFolder() {
+
+  }
+
+
+
 
