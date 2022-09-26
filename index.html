@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Drive API Quickstart</title>
+    <title>Switch Folders for chromatique</title>
     <meta charset="utf-8" />
     <script src="https://apis.google.com/js/api.js"></script>
   </head>
   <body>
     <p>Drive API Quickstart</p>
 
-<button onclick="authenticate().then(loadClient).then(execute)">authorize and load</button>
-<button onclick="execute()">execute</button>
-<button onclick="createFolder()">Create folder</button>
+    <button onclick="authenticate().then(loadClient).then(execute)">
+      authorize and load
+    </button>
+    <button onclick="execute()">execute</button>
+    <button onclick="createFolder()">Create folder</button>
 
-<ul class="list-manga-dir">
-</ul>
-  <script src="/script.js"></script>
-  <script src="/modules/conf.js"></script>
+    <ul class="list-manga-dir"></ul>
+    <script src="/script.js"></script>
+    <script src="/modules/conf.js"></script>
   </body>
 </html>
