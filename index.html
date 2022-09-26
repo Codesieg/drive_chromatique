@@ -9,10 +9,11 @@
     <p>Drive API Quickstart</p>
 
     <button onclick="authenticate().then(loadClient).then(execute)">
-      authorize and load
+      authorize
     </button>
-    <button onclick="execute()">execute</button>
+    <button onclick="loadClient().then(execute)">execute</button>
     <button onclick="createFolder()">Create folder</button>
+    <button onclick="moveFolder()">Move folder</button>
 
     <ul class="list-manga-dir"></ul>
     <script src="/script.js"></script>

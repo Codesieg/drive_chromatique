@@ -99,26 +99,52 @@ async function createFolder() {
 
   // TODO : Création des dossiers
   // Indiquer dans quels dossier créer les dossier de remplacement
-  for (const fileName of fileNames) {
-    const fileMetadata = {
-      name: fileName,
-      mimeType: "application/vnd.google-apps.folder",
-    };
-    try {
-      const file = await gapi.client.drive.files.create({
-        resource: fileMetadata,
-        fields: "id",
-      });
-      console.log("Folder Id:", file.result.id);
-    } catch (err) {
-      // TODO(developer) - Handle error
-      throw err;
-    }
+  // for (const fileName of fileNames) {
+  const fileMetadata = {
+    // name: fileName,
+    name: "#1 Dossier déplacement pour new lien.",
+    mimeType: "application/vnd.google-apps.folder",
+    // parents: [FOLDER_ID],
+  };
+  try {
+    const file = await gapi.client.drive.files.create({
+      resource: fileMetadata,
+      fields: "id",
+    });
+    console.log("Folder Id:", file.result.id);
+  } catch (err) {
+    // TODO(developer) - Handle error
+    throw err;
   }
 }
+// }
 
 // Here function for move old folder to new folder
-function moveFolder() {}
+async function moveFolder() {
+  //TODO : Needs to make a array with all id sub folders
+  try {
+    // Retrieve the existing parents to remove
+    const file = await gapi.client.drive.files.get({
+      fileId: FOLDER_ID,
+      fields: "parents",
+    });
+    console.log(file);
+    // Move the file to the new folder
+    const previousParents = file.result.parents
+      .map(function (parent) {
+        return parent.id;
+      })
+      .join(",");
+    const files = await gapi.client.drive.files.update({
+      fileId: "1B2kcn0ErNiziL8f3chdNDKvI1yFk4qjl",
+      addParents: "157dD_TNjwE6UmSe6p2i4tFMEp4nZGhYA",
+      removeParents: previousParents,
+      fields: "id, parents",
+    });
 
-// Here function for remove old folder
-function removeOldFolder() {}
+    return files.status;
+  } catch (err) {
+    // TODO(developer) - Handle error
+    throw err;
+  }
+}
