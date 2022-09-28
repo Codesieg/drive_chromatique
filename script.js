@@ -1,4 +1,5 @@
 let fileNames = [];
+let idFiles = [];
 
 function authenticate() {
   return gapi.auth2
@@ -50,25 +51,27 @@ function execute() {
         function (response) {
           // Handle the results here (response.result has the parsed body).
           let allFiles = response.result.files;
-          console.log(allFiles);
-
           for (const file of allFiles) {
             fileNames.push(file.name);
+            idFiles.push(file.id);
             const getUl = document.querySelector(".list-manga-dir");
             let creatLi = document.createElement("li");
             let creatA = document.createElement("a");
+            let creatSpan = document.createElement("span");
 
             creatA.setAttribute("href", file["webViewLink"]);
             creatA.textContent = file["name"];
+            creatSpan.textContent = " - " + file["id"];
             getUl.appendChild(creatLi);
             const getElementLi = getUl.lastChild;
             console.log(creatA);
             getElementLi.appendChild(creatA);
+            getElementLi.appendChild(creatSpan);
 
             console.log("Nom : ", file["name"]);
             console.log("Link : ", file["webViewLink"]);
           }
-          console.log(fileNames);
+          console.log(idFiles);
           console.log("Response", response.result.files);
         },
         // .then(function(response) {
@@ -93,13 +96,10 @@ gapi.load("client:auth2", function () {
  * @return{obj} folder Id
  * */
 async function createFolder() {
-  // TODO: Récupérer tout les nom de dossier dans un tableau
-
   // TODO : Création d'une boucle pour créer tout les dossiers.
 
   // TODO : Création des dossiers
   // Indiquer dans quels dossier créer les dossier de remplacement
-  // for (const fileName of fileNames) {
   const fileMetadata = {
     // name: fileName,
     name: "#1 Dossier déplacement pour new lien.",
@@ -117,34 +117,58 @@ async function createFolder() {
     throw err;
   }
 }
-// }
 
 // Here function for move old folder to new folder
 async function moveFolder() {
   //TODO : Needs to make a array with all id sub folders
+
+  for (const idFile of idFiles) {
+    try {
+      // Retrieve the existing parents to remove
+      const file = await gapi.client.drive.files.get({
+        fileId: FOLDER_ID,
+        fields: "parents",
+      });
+      // Move the file to the new folder
+      const previousParents = file.result.parents
+        .map(function (parent) {
+          return parent.id;
+        })
+        .join(",");
+      const files = await gapi.client.drive.files.update({
+        fileId: idFile,
+        addParents: "1aPnrWrbvhFdiHdEWqMGR5Xpyi8hIxj0G",
+        removeParents: previousParents,
+        fields: "id, parents",
+      });
+
+      console.log("Folder Id:", idFile + " déplacé ");
+    } catch (err) {
+      // TODO(developer) - Handle error
+      throw err;
+    }
+  }
+
+  // TODO : Renomer le nouveau dossier, supprimer l'ancien puis créer le prochain
+}
+
+async function renameFolder() {
   try {
-    // Retrieve the existing parents to remove
-    const file = await gapi.client.drive.files.get({
+    const getFile = await gapi.client.drive.files.get({
       fileId: FOLDER_ID,
-      fields: "parents",
     });
-    console.log(file);
-    // Move the file to the new folder
-    const previousParents = file.result.parents
-      .map(function (parent) {
-        return parent.id;
-      })
-      .join(",");
-    const files = await gapi.client.drive.files.update({
-      fileId: "1B2kcn0ErNiziL8f3chdNDKvI1yFk4qjl",
-      addParents: "157dD_TNjwE6UmSe6p2i4tFMEp4nZGhYA",
-      removeParents: previousParents,
+    const updateFile = await gapi.client.drive.files.update({
+      fileId: FOLDER_ID,
+      name: "chroma bis",
       fields: "id, parents",
     });
+    console.log("ok");
 
-    return files.status;
-  } catch (err) {
-    // TODO(developer) - Handle error
-    throw err;
+    const deleteFile = await gapi.client.drive.files.delete({
+      fileId: "1aPnrWrbvhFdiHdEWqMGR5Xpyi8hIxj0G",
+    });
+    console.log(FOLDER_ID + " deleted");
+  } catch (error) {
+    console.log("too bad");
   }
 }
