@@ -112,6 +112,7 @@ async function createFolder() {
       fields: "id",
     });
     console.log("Folder Id:", file.result.id);
+    return file.result.name;
   } catch (err) {
     // TODO(developer) - Handle error
     throw err;
@@ -168,6 +169,8 @@ async function renameFolder() {
       fileId: "1aPnrWrbvhFdiHdEWqMGR5Xpyi8hIxj0G",
     });
     console.log(FOLDER_ID + " deleted");
+
+    const nextFolder = createFolder();
   } catch (error) {
     console.log("too bad");
   }
