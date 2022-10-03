@@ -8,6 +8,10 @@ let oAuth;
 let folderId;
 let driveId;
 
+let validate = document
+  .getElementById("validate")
+  .addEventListener("click", getCredentials);
+
 function getCredentials() {
   apiKey = document.getElementById("apiKey").value;
   oAuth = document.getElementById("oAuth").value;
@@ -20,7 +24,7 @@ function getCredentials() {
       oAuth +
       " driveid : " +
       driveId +
-      "folderId : " +
+      " folderId : " +
       folderId
   );
 }
