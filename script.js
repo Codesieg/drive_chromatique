@@ -73,53 +73,47 @@ function loadClient() {
 }
 // Make sure the client is loaded and sign-in is complete before calling this method.
 function execute() {
-  return (
-    gapi.client.drive.files
-      // .get({
-      //   supportsAllDrives: true,
-      //   fileId: "1OPtsPWZ9uz2zMkodRXqQLoxf9K2U1F",
-      // })
-      .list({
-        supportsAllDrives: true,
-        includeItemsFromAllDrives: true,
-        corpora: "drive",
-        driveId: driveId, // ID of drive to connect
-        fields: "files(id, name, parents, webViewLink)", // fields we want to include
-        q: `'${FOLDER_ID}' in parents and trashed = false`, // Find only in chromatique folder
-        pagesize: 3,
-      })
-      .then(
-        function (response) {
-          // Handle the results here (response.result has the parsed body).
-          let allFiles = response.result.files;
-          for (const file of allFiles) {
-            fileNames.push(file.name);
-            idFiles.push(file.id);
-            const getUl = document.querySelector("#list-manga-dir");
-            let creatLi = document.createElement("li");
-            let creatA = document.createElement("a");
-            let creatSpan = document.createElement("span");
+  return gapi.client.drive.files
+    .list({
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+      corpora: "drive",
+      driveId: driveId, // ID of drive to connect
+      fields: "files(id, name, parents, webViewLink)", // fields we want to include
+      q: `'${FOLDER_ID}' in parents and trashed = false`, // Find only in chromatique folder
+      pagesize: 3,
+    })
+    .then(
+      function (response) {
+        // Handle the results here (response.result has the parsed body).
+        let allFiles = response.result.files;
+        for (const file of allFiles) {
+          fileNames.push(file.name);
+          idFiles.push(file.id);
+          const getUl = document.querySelector("#list-manga-dir");
+          let creatLi = document.createElement("li");
+          let creatA = document.createElement("a");
+          let creatSpan = document.createElement("span");
 
-            creatA.setAttribute("href", file["webViewLink"]);
-            creatA.textContent = file["name"];
-            creatSpan.textContent = " - " + file["id"];
-            getUl.appendChild(creatLi);
-            const getElementLi = getUl.lastChild;
-            console.log(creatA);
-            getElementLi.appendChild(creatA);
-            getElementLi.appendChild(creatSpan);
+          creatA.setAttribute("href", file["webViewLink"]);
+          creatA.textContent = file["name"];
+          creatSpan.textContent = " - " + file["id"];
+          getUl.appendChild(creatLi);
+          const getElementLi = getUl.lastChild;
+          console.log(creatA);
+          getElementLi.appendChild(creatA);
+          getElementLi.appendChild(creatSpan);
 
-            console.log("Nom : ", file["name"]);
-            console.log("Link : ", file["webViewLink"]);
-          }
-          console.log(idFiles);
-          console.log("Response", response.result.files);
-        },
-        function (err) {
-          console.error("Execute error", err);
+          console.log("Nom : ", file["name"]);
+          console.log("Link : ", file["webViewLink"]);
         }
-      )
-  );
+        console.log(idFiles);
+        console.log("Response", response.result.files);
+      },
+      function (err) {
+        console.error("Execute error", err);
+      }
+    );
 }
 
 /**
@@ -208,3 +202,9 @@ async function renameFolder() {
     console.log("too bad");
   }
 }
+
+// Besoin supp venir gérer le partage des dossiers et connecter le tout à autocode pour la maj des liens
+
+//récupération de l'id du parent et liste de tous les dossiers présent
+// Ajout des droits de partage par lien et récupération des liens des dossiers
+// MAJ des liens dans autocode
