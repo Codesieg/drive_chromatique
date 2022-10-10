@@ -27,6 +27,18 @@ function getCredentials() {
       " folderId : " +
       folderId
   );
+
+  gapi.load("client:auth2", function () {
+    gapi.auth2.init({ client_id: oAuth }); // auth2 key authentification
+  });
+
+  if (gapi.load) {
+    const btnCharger = document.getElementById("charger");
+    btnCharger.classList.remove("d-none");
+    const btnValidate = document.getElementById("validate");
+    console.log(btnValidate);
+    btnValidate.classList.add("d-none");
+  }
 }
 
 // authenticate to google
@@ -83,7 +95,7 @@ function execute() {
           for (const file of allFiles) {
             fileNames.push(file.name);
             idFiles.push(file.id);
-            const getUl = document.querySelector(".list-manga-dir");
+            const getUl = document.querySelector("#list-manga-dir");
             let creatLi = document.createElement("li");
             let creatA = document.createElement("a");
             let creatSpan = document.createElement("span");
@@ -109,9 +121,6 @@ function execute() {
       )
   );
 }
-gapi.load("client:auth2", function () {
-  gapi.auth2.init({ client_id: oAuth }); // auth2 key authentification
-});
 
 /**
  * Create a folder and prints the folder ID
