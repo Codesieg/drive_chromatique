@@ -95,6 +95,8 @@ function execute() {
           let creatA = document.createElement("a");
           let creatSpan = document.createElement("span");
 
+          creatLi.classList.add("list-manga-dir");
+
           creatA.setAttribute("href", file["webViewLink"]);
           creatA.textContent = file["name"];
           creatSpan.textContent = " - " + file["id"];
@@ -146,7 +148,7 @@ async function createFolder() {
 // Here function for move old folder to new folder
 async function moveFolder() {
   // Create new folder
-  createFolder(newFolderId);
+  // createFolder(newFolderId);
 
   //TODO : Needs to make a array with all id sub folders
 

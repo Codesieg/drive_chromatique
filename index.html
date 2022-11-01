@@ -10,10 +10,18 @@
       integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div class="container text-center">
       <div style="height: 100px"></div>
+      <div class="col d-flex mb-5">
+        <button class="btn btn-primary me-3" onclick="renameFolder()">Rename folder</button>
+        <button class="btn btn-primary me-3" onclick="authenticate().then(loadClient)">Connexion Google</button>
+        <button class="btn btn-primary me-3" onclick="loadClient().then(execute)">execute</button>
+        <button class="btn btn-primary me-3" onclick="createFolder()">Create folder</button>
+        <button class="btn btn-primary me-3" onclick="moveFolder()">Move folder</button>
+      </div>
       <div class="col d-flex">
         <div
           class="col d-flex align-items-center flex-column bg-secondary text-white p-3"
@@ -64,11 +72,7 @@
         </div>
       </div>
     </div>
-    <button onclick="renameFolder()">Rename folder</button>
-    <button onclick="authenticate().then(loadClient)">Connexion Google</button>
-    <button onclick="loadClient().then(execute)">execute</button>
-    <button onclick="createFolder()">Create folder</button>
-    <button onclick="moveFolder()">Move folder</button>
+
   </body>
   <script src="/modules/conf.js"></script>
 
