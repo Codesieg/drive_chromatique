@@ -207,6 +207,6 @@ async function renameFolder() {
 
 // Besoin supp venir gérer le partage des dossiers et connecter le tout à autocode pour la maj des liens
 
-//récupération de l'id du parent et liste de tous les dossiers présent
+// récupération de l'id du parent et liste de tous les dossiers présent
 // Ajout des droits de partage par lien et récupération des liens des dossiers
 // MAJ des liens dans autocode
