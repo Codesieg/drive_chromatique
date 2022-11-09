@@ -1,3 +1,4 @@
+Configuration google drive :
 Remplir le fichier de conf.exemple dans modules/conf.js 
 
 Pour lancer le serveur : 
