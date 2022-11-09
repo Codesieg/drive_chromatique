@@ -7,6 +7,10 @@ let apiKey;
 let oAuth;
 let folderId;
 let driveId;
+// let apiKey = "AIzaSyA3TUHMYHWTb7uPTn9LE8CIS_K4LfgeUH0";
+// let oAuth = "763374182806-7g4ufr9sr7dtur1ua16bihe4j9f6iga5.apps.googleusercontent.com";
+// let driveId = "0AFIye_b5hvkvUk9PVA" ;
+// let folderId = "1UcNLgd4r1kq8uAfwa2dlHl09FuRZbjdl";
 
 let validate = document
   .getElementById("validate")
@@ -32,13 +36,13 @@ function getCredentials() {
     gapi.auth2.init({ client_id: oAuth }); // auth2 key authentification
   });
 
-  if (gapi.load) {
-    const btnCharger = document.getElementById("charger");
-    btnCharger.classList.remove("d-none");
-    const btnValidate = document.getElementById("validate");
-    console.log(btnValidate);
-    btnValidate.classList.add("d-none");
-  }
+//   if (gapi.load) {
+//     const btnCharger = document.getElementById("charger");
+//     btnCharger.classList.remove("d-none");
+//     const btnValidate = document.getElementById("validate");
+//     console.log(btnValidate);
+//     btnValidate.classList.add("d-none");
+//   }
 }
 
 // authenticate to google
