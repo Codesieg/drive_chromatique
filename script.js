@@ -3,37 +3,38 @@ let idFiles = [];
 let newFolderId;
 
 // Get credentials
-let apiKey;
-let oAuth;
-let folderId;
-let driveId;
+// let apiKey;
+// let oAuth;
+// let folderId;
+// let driveId;
 // let apiKey = "AIzaSyA3TUHMYHWTb7uPTn9LE8CIS_K4LfgeUH0";
 // let oAuth = "763374182806-7g4ufr9sr7dtur1ua16bihe4j9f6iga5.apps.googleusercontent.com";
-// let driveId = "0AFIye_b5hvkvUk9PVA" ;
+// let driveId = "" ;
 // let folderId = "1UcNLgd4r1kq8uAfwa2dlHl09FuRZbjdl";
 
-let validate = document
-  .getElementById("validate")
-  .addEventListener("click", getCredentials);
+// let validate = document
+//   .getElementById("validate")
+//   .addEventListener("click", getCredentials);
 
-function getCredentials() {
-  apiKey = document.getElementById("apiKey").value;
-  oAuth = document.getElementById("oAuth").value;
-  driveId = document.getElementById("driveId").value;
-  folderId = document.getElementById("folderId").value;
-  console.log(
-    "apikey : " +
-      apiKey +
-      " oAuth : " +
-      oAuth +
-      " driveid : " +
-      driveId +
-      " folderId : " +
-      folderId
-  );
+// function getCredentials() {
+//   apiKey = document.getElementById("apiKey").value;
+//   oAuth = document.getElementById("oAuth").value;
+//   driveId = document.getElementById("driveId").value;
+//   folderId = document.getElementById("folderId").value;
+//   console.log(
+//     "apikey : " +
+//       apiKey +
+//       " oAuth : " +
+//       oAuth +
+//       " driveid : " +
+//       driveId +
+//       " folderId : " +
+//       folderId
+//   );
 
   gapi.load("client:auth2", function () {
-    gapi.auth2.init({ client_id: oAuth }); // auth2 key authentification
+    console.log("gapi loaded");
+    gapi.auth2.init({ client_id: "763374182806-7g4ufr9sr7dtur1ua16bihe4j9f6iga5.apps.googleusercontent.com" }); // auth2 key authentification
   });
 
 //   if (gapi.load) {
@@ -43,7 +44,7 @@ function getCredentials() {
 //     console.log(btnValidate);
 //     btnValidate.classList.add("d-none");
 //   }
-}
+// }
 
 // authenticate to google
 function authenticate() {
@@ -63,7 +64,7 @@ function authenticate() {
     );
 }
 function loadClient() {
-  gapi.client.setApiKey(apiKey); // api key here
+  gapi.client.setApiKey("AIzaSyA3TUHMYHWTb7uPTn9LE8CIS_K4LfgeUH0"); // api key here
   return gapi.client
     .load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
     .then(
@@ -77,15 +78,18 @@ function loadClient() {
 }
 // Make sure the client is loaded and sign-in is complete before calling this method.
 function execute() {
+  const file =  gapi.client.drive.files.get({
+    fileId: "1VR3moGu3ePANqR1iwK0iHZeqAvbeetF1",
+  
+  });
+  console.log(file);
   return gapi.client.drive.files
     .list({
-      supportsAllDrives: true,
-      includeItemsFromAllDrives: true,
-      corpora: "drive",
-      driveId: driveId, // ID of drive to connect
+      // supportsAllDrives: true,
+      includeItemsFromAllDrives: false,
+      // corpora: "drive",
+      // driveId: "0AIO1nysW2cHkUk9PVA", // ID of drive to connect
       fields: "files(id, name, parents, webViewLink)", // fields we want to include
-      q: `'${FOLDER_ID}' in parents and trashed = false`, // Find only in chromatique folder
-      pagesize: 3,
     })
     .then(
       function (response) {
@@ -157,18 +161,23 @@ async function moveFolder() {
   //TODO : Needs to make a array with all id sub folders
 
   for (const idFile of idFiles) {
+    console.log(idFile)
     try {
-      // Retrieve the existing parents to remove
+      // Retrieve the existing parents to move and remove
       const file = await gapi.client.drive.files.get({
-        fileId: folderId,
+        fileId: "1-AGaKDyle53S6ud5twedEsf39srw71ak",
         fields: "parents",
       });
+      console.log(file);
+      const previousParents = file.result.parents;
+      console.log(previousParents);
+
+      
+      previousParents.map(function (parent) {
+        return parent.id;
+      })
+      .join(",");
       // Move the file to the new folder
-      const previousParents = file.result.parents
-        .map(function (parent) {
-          return parent.id;
-        })
-        .join(",");
       const files = await gapi.client.drive.files.update({
         fileId: idFile,
         addParents: newFolderId,
@@ -214,3 +223,6 @@ async function renameFolder() {
 // récupération de l'id du parent et liste de tous les dossiers présent
 // Ajout des droits de partage par lien et récupération des liens des dossiers
 // MAJ des liens dans autocode
+
+
+
