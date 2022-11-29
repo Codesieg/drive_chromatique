@@ -84,7 +84,7 @@ function loadClient() {
 // Make sure the client is loaded and sign-in is complete before calling this method.
 function execute() {
   // we begin to creat the new folder
-  creatFirstFolder();
+  // creatFirstFolder();
 }
 
 /**
@@ -92,13 +92,22 @@ function execute() {
  * @return{obj} folder Id
  * */
 let filemetadata;
-async function createFolder(newFolderName) {
+async function createFolder(idParent, newFolderName) {
   // Indiquer dans quels dossier créer le dossier de remplacement
-fileMetadata = {
-    name: newFolderName, // TODO : input pour le nom du dossier
+  if (idParent == undefined) {
+      // creating the new folder 
+      let folderName = prompt("Please enter folder name", "new folder " + Date.now());
+  fileMetadata = {
+    name: folderName, // TODO : input pour le nom du dossier
     mimeType: "application/vnd.google-apps.folder",
-    parents: [mainNewFolder],
   };
+  } else {
+    fileMetadata = {
+        name: newFolderName, // TODO : input pour le nom du dossier
+        mimeType: "application/vnd.google-apps.folder",
+        parents: [idParent],
+      };
+  }
   try {
     const file = await gapi.client.drive.files.create({
       resource: fileMetadata,
@@ -194,38 +203,38 @@ async function renameFolder() {
 }
 
 async function regenerateIdFolder() {
-gapi.client.drive.files.generateIds({
-    "count": 1
-  })
-  .then(
-      function(response) {
-        newId =  response.result.ids;
-        console.log(newId["0"]);
-        return newId["0"];
-      }
-  )
-  try {
-    const getFile = await gapi.client.drive.files.get({
-      fileId: newFolderId,
-    });
-    console.log(getFile);
-    const updateFile = await gapi.client.drive.files.update({
-      fileId: newId,
-      name: "chroma bis",
-      fields: "id, parents",
-    });
-    console.log(updateFile);
-    console.log("ok");
-    //
-  } catch (error) {
-    console.log("too bad");
-  }
+  gapi.client.drive.files.generateIds({
+      "count": 1
+    })
+    .then(
+        function(response) {
+          newId =  response.result.ids;
+          console.log(newId["0"]);
+          return newId["0"];
+        }
+    )
+    try {
+      const getFile = await gapi.client.drive.files.get({
+        fileId: newFolderId,
+      });
+      console.log(getFile);
+      const updateFile = await gapi.client.drive.files.update({
+        fileId: newId,
+        name: "chroma bis",
+        fields: "id, parents",
+      });
+      console.log(updateFile);
+      console.log("ok");
+      //
+    } catch (error) {
+      console.log("too bad");
+    }
 }
 
 async function creatFirstFolder() {
   // creating the new folder 
   fileMetadata = {
-    name: "new folder 271122", // TODO : input pour le nom du dossier
+    name: "new folder 291122", // TODO : input pour le nom du dossier
     mimeType: "application/vnd.google-apps.folder",
   };
   // TODO : explain why firstfolder is needed
@@ -243,7 +252,10 @@ function listFolders() {
     .list({
       includeItemsFromAllDrives: false,
       fields: "files(id, name, parents, webViewLink)", // fields we want to include
-      q: `'1E4HZZh1aysmnhpklWkaUzoVUO0vwuE_W' in parents`,
+      // q: `'1E4HZZh1aysmnhpklWkaUzoVUO0vwuE_W' in parents`,
+      // q: 'mimeType = \'application/vnd.google-apps.folder\' and trashed = false',
+      q: 'trashed = false and \'root\' in parents',
+      // spaces: 'drive',
     })
     .then(
       function (response) {
@@ -271,7 +283,7 @@ function listFolders() {
           console.log("Nom : ", file["name"]);
           console.log("Link : ", file["webViewLink"]);
           console.log("Id : ", file["id"]);
-          createFolder( file["name"] );
+          // createFolder( file["name"] );
         } 
         console.log(idFiles);
         console.log("Response", response.result.files);
@@ -334,3 +346,10 @@ function listSubFolders(subFoldersId) {
 
 
 
+// Je me connecte a google => bouton de connexion a google
+// Je vais chercher mon drive et je l'affiche => interface de listing de dossier
+// Je crée un nouveau dossier => bouton nouveau dossier
+// Au clique d'un dossier listé, ouverture d'une pop-in demandant de choisir le dossier dans lequel dupliquer 
+// Lister tout le contenu du dossier choisi, si il est de type folder => création d'un dossier, si il est de type fichier => copy, s'il n'y à rien je reviens au debut
+// Pour chaque fichier déplaçé récupération du lien complet 
+// mise à jour dans les cards du discord 
